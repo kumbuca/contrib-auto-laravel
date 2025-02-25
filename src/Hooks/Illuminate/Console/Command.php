@@ -10,6 +10,7 @@ use OpenTelemetry\Context\Context;
 use OpenTelemetry\Contrib\Instrumentation\Laravel\Hooks\LaravelHook;
 use OpenTelemetry\Contrib\Instrumentation\Laravel\Hooks\LaravelHookTrait;
 use OpenTelemetry\Contrib\Instrumentation\Laravel\Hooks\PostHookTrait;
+use OpenTelemetry\SDK\Sdk;
 use function OpenTelemetry\Instrumentation\hook;
 use OpenTelemetry\SemConv\TraceAttributes;
 use Throwable;
@@ -21,6 +22,9 @@ class Command implements LaravelHook
 
     public function instrument(): void
     {
+        if (Sdk::isInstrumentationDisabled('laravel-command') === true) {
+            return;
+        }
         $this->hookExecute();
     }
 
